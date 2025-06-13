@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "350295958258",
+    "project_id": "uber-clone-kotlin-b2011",
+    "storage_bucket": "uber-clone-kotlin-b2011.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350295958258:android:e5725e9d95dfaddf96e66b",
+        "android_client_info": {
+          "package_name": "com.uber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7WtzXzuuM9oGZdsqWSWBrNhNYaWL5k5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350295958258:android:4bd6e8630040f09f96e66b",
+        "android_client_info": {
+          "package_name": "com.uberapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7WtzXzuuM9oGZdsqWSWBrNhNYaWL5k5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
