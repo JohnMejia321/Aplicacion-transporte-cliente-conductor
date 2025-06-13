@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">uber app driver</string>
+    <string name="google_maps_key">AIzaSyBNsO_PL68FV3jwJI3P60MQzVmudGf9WOU</string>
+
 </resources>
