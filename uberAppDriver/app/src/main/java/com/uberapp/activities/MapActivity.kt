@@ -97,6 +97,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        googleMap?.uiSettings?.isZoomControlsEnabled = true
         easyWayLocation?.startLocation();
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -108,7 +109,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
         ) {
             return
         }
-        googleMap?.isMyLocationEnabled = true
+        googleMap?.isMyLocationEnabled = false
     }
 
 
@@ -127,7 +128,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
                 CameraPosition.builder().target(myLocationLatLng!!).zoom(17f).build()
             )
         )
-        //addMarker()
+        addMarker()
     }
 
 
@@ -137,12 +138,42 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
 
     override fun onResume() {
         super.onResume()
-        easyWayLocation?.startLocation();
     }
 
     override fun onDestroy() {
         super.onDestroy()
         easyWayLocation?.endUpdates();
+    }
+
+    private fun addMarker() {
+        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.uber_car)
+        val markerIcon = getMarkerFromDrawable(drawable!!)
+        if (markerDriver != null) {
+            markerDriver?.remove() // NO REDIBUJAR EL ICONO
+        }
+        if (myLocationLatLng != null) {
+            markerDriver = googleMap?.addMarker(
+                MarkerOptions()
+                    .position(myLocationLatLng!!)
+                    .anchor(0.5f, 0.5f)
+                    .flat(true)
+                    .icon(markerIcon)
+            )
+        }
+    }
+
+
+    private fun getMarkerFromDrawable(drawable: Drawable): BitmapDescriptor {
+        val canvas = Canvas()
+        val bitmap = Bitmap.createBitmap(
+            70,
+            150,
+            Bitmap.Config.ARGB_8888
+        )
+        canvas.setBitmap(bitmap)
+        drawable.setBounds(0,0,70,150)
+        drawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
    /* private fun addMarker() {
