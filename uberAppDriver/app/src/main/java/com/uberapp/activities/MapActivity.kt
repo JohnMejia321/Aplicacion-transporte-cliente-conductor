@@ -2,6 +2,7 @@ package com.uberapp.activities
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
@@ -9,6 +10,7 @@ import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.uberapp.R
@@ -70,6 +73,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
             )
         )
 
+        binding.btnConnect.setOnClickListener { connectDriver() }
+        binding.btnDisconnect.setOnClickListener { disconnectDriver() }
+
     }
 
     val locationPermissions =
@@ -79,12 +85,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
                 when {
                     permission.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
                         Log.d("LOCALIZACION", "Permiso concedido")
-                    easyWayLocation?.startLocation();
+                 //   easyWayLocation?.startLocation();
                     }
 
                     permission.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
                         Log.d("LOCALIZACION", "Permiso concedido con limitacion")
-                    easyWayLocation?.startLocation();
+              //      easyWayLocation?.startLocation();
                     }
 
                     else -> {
@@ -98,7 +104,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         googleMap?.uiSettings?.isZoomControlsEnabled = true
-        easyWayLocation?.startLocation();
+      //  easyWayLocation?.startLocation();
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -110,6 +116,40 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
             return
         }
         googleMap?.isMyLocationEnabled = false
+      /*  try {
+            val success = googleMap?.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(this, R.raw.style)
+            )
+            if (!success!!) {
+                Log.d("MAPAS", "No se pudo encontrar el estilo")
+            }
+
+        } catch (e: Resources.NotFoundException) {
+            Log.d("MAPAS", "Error: ${e.toString()}")
+        }*/
+    }
+
+    private fun disconnectDriver() {
+        easyWayLocation?.endUpdates()
+        if (myLocationLatLng != null) {
+            showButtonConnect()
+        }
+    }
+
+    private fun connectDriver() {
+        easyWayLocation?.endUpdates() // OTROS HILOS DE EJECUCION
+        easyWayLocation?.startLocation()
+        showButtonDisconnect()
+    }
+
+    private fun showButtonConnect() {
+        binding.btnDisconnect.visibility = View.GONE // OCULTANDO EL BOTON DE DESCONECTARSE
+        binding.btnConnect.visibility = View.VISIBLE // MOSTRANDO EL BOTON DE CONECTARSE
+    }
+
+    private fun showButtonDisconnect() {
+        binding.btnDisconnect.visibility = View.VISIBLE // MOSTRANDO EL BOTON DE DESCONECTARSE
+        binding.btnConnect.visibility = View.GONE // OCULATNDO EL BOTON DE CONECTARSE
     }
 
 
