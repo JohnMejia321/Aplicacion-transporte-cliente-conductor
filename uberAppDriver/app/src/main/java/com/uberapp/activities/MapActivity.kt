@@ -36,6 +36,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.uberapp.R
 import com.uberapp.databinding.ActivityMapBinding
+import com.uberapp.providers.AuthProvider
+import com.uberapp.providers.GeoProvider
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
 
@@ -44,6 +46,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
     private var easyWayLocation: EasyWayLocation? = null
     private var myLocationLatLng: LatLng? = null
     private var markerDriver: Marker? = null
+    private val geoProvider = GeoProvider()
+    private val authProvider = AuthProvider()
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +107,28 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
 
         }
 
+    private fun checkIfDriverIsConnected() {
+        geoProvider.getLocation(authProvider.getId()).addOnSuccessListener { document ->
+            if (document.exists()) {
+                if (document.contains("l")) {
+                    connectDriver()
+                }
+                else {
+                    showButtonConnect()
+                }
+            }
+            else {
+                showButtonConnect()
+            }
+        }
+    }
+
+
+    private fun saveLocation(){
+        if (myLocationLatLng !=null){
+            geoProvider.saveLocation(authProvider.getId(), myLocationLatLng!!)
+    }}
+
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         googleMap?.uiSettings?.isZoomControlsEnabled = true
@@ -132,6 +160,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
     private fun disconnectDriver() {
         easyWayLocation?.endUpdates()
         if (myLocationLatLng != null) {
+            geoProvider.removeLocation(authProvider.getId())
             showButtonConnect()
         }
     }
@@ -169,6 +198,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, Listener {
             )
         )
         addMarker()
+        saveLocation()
     }
 
 
